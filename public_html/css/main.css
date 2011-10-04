@@ -1,0 +1,227 @@
+body
+{
+	padding: 0px;
+	margin: 0px;
+	text-align: center;
+	background-color: #74aa81;
+	color: #000000;
+}
+
+body, div, td
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+img
+{
+	border: 0;
+}
+
+a
+{
+	color: #000000;
+}
+
+h1
+{
+	font-size: 48px;
+	font-weight: bold;
+}
+
+h2 
+{
+	font-size: 21px; 
+	font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	margin-bottom: 8px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #9bc1a4;
+}
+h3
+{
+	visibility: hidden;
+	display: none;
+}
+
+table
+{
+	font-size: 11px; 
+	color: #000000;
+}
+
+div#header
+{
+	width: 979px;
+	text-align: right;
+	color: #216332;
+	margin: 0px auto;
+}
+
+div#content
+{
+	background-color: #216332;
+	text-align: left;
+	width: 979px;
+	margin: 0px auto;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+div#column1a
+{
+	width: 313px;
+	float: left;
+	padding-left: 10px;
+}
+
+div#column1b
+{
+	width: 313px;
+	float: left;
+	padding-left: 10px;
+}
+
+div#column1c
+{
+	width: 313px;
+	float: left;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div#contact
+{
+	font-size: 24px;
+}
+
+div#benchmark
+{
+	font-size: 11px;
+}
+
+div#copyright
+{
+	font-size: 11px;
+}
+
+.box
+{	
+	padding: 5px;
+	margin: 5px;
+	background-color: #ffffff;
+	font-size: 11px; 
+	color: #000000;
+}
+
+.box a
+{
+	color: #216332;
+}
+
+.box a:hover
+{
+	color: #9bc1a4;
+}
+
+.tweet
+{
+	font-size: 16px;
+}
+
+.right
+{
+	float: right;
+	text-align:right;
+}
+
+.top {
+    vertical-align: top;
+}
+
+.center
+{
+	text-align: center;
+}
+
+.justify
+{
+	text-align: justify;
+}
+
+.clear
+{
+	clear: both;
+}
+
+.contact {
+    border: 0;
+}
+
+.icon {
+    border: 0;
+}
+
+table.formatting {
+    width: 100%;
+    border-collapse: collapse;
+    
+}
+
+td.formatting {
+    padding: 0;
+    width: 68px;
+    vertical-align: top;
+}
+
+td.gamesformatting {
+    padding: 0;
+    width: 68px;
+    vertical-align: top;
+}
+
+.cover {
+    border: 0;
+    width: 64px;
+}
+
+
+/*----------------------------------------------------------------------------*/
+/*-------------             NIFTY CORNERS                        -------------*/
+/*----------------------------------------------------------------------------*/
+/*Nifty Corners Cube CSS by Alessandro Fulciniti
+The following classes are added dinamically by javascript,
+and their use should be avoided in the markup */
+
+b.niftycorners,b.niftyfill{display:block}
+b.niftycorners *{display:block;height: 1px;line-height:1px;font-size: 1px;
+    overflow:hidden;border-style:solid;border-width: 0 1px}
+/*normal*/
+b.r1{margin: 0 3px;border-width: 0 2px}
+b.r2{margin: 0 2px}
+b.r3{margin: 0 1px}
+b.r4{height: 2px}
+b.rb1{margin: 0 8px;border-width:0 2px}
+b.rb2{margin: 0 6px;border-width:0 2px}
+b.rb3{margin: 0 5px}
+b.rb4{margin: 0 4px}
+b.rb5{margin: 0 3px}
+b.rb6{margin: 0 2px}
+b.rb7{margin: 0 1px;height:2px}
+b.rb8{margin: 0;height:2px}
+b.rs1{margin: 0 1px}
+/*transparent inside*/
+b.t1{border-width: 0 5px}
+b.t2{border-width: 0 3px}
+b.t3{border-width: 0 2px}
+b.t4{height: 2px}
+b.tb1{border-width: 0 10px}
+b.tb2{border-width: 0 8px}
+b.tb3{border-width: 0 6px}
+b.tb4{border-width: 0 5px}
+b.tb5{border-width: 0 4px}
+b.tb6{border-width: 0 3px}
+b.tb7{border-width: 0 2px;height:2px}
+b.tb8{border-width: 0 1px;height:2px}
+b.ts1{border-width: 0 2px}
