@@ -22,6 +22,7 @@ $dataSources = array(
 	'lastfm'		=> 60,
 	'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
+	'wow'			=> 43200,
 );
 
 $cacheData = json_decode(file_get_contents($CACHE_FILE),true);
@@ -160,6 +161,68 @@ function steam() {
 	);
 }
 
+function wow() {
+	$benchmark_start = time();
+	$characters = array(
+		'Gaffer'		=> false,
+		'Getburnt'		=> false,
+		'Veincane'		=> false,
+		'Toppazz'		=> false,
+		'Toopro'		=> false,
+		'Levita'		=> false,
+		'Ttg'			=> false,
+		'Notgaffer'		=> false,
+		'Loveglove'		=> false,
+	);
+	$currentInstance = 25;	// 25 = Firelands
+	
+	// build our mutli curl request
+	$mh = curl_multi_init();
+	foreach($characters as $character=>$data) {
+		$url = sprintf('http://us.battle.net/api/wow/character/crushridge/%s?fields=progression',
+			$character);
+			
+		$characters[$character] = curl_prep($url);
+		curl_multi_add_handle($mh, $characters[$character]);
+	}
+	
+	// execute the multi curl request
+	$running = 0;
+	do {
+		curl_multi_exec($mh, $running);
+	} while($running > 0);
+	
+	// and process the results
+	$characterData = array();
+	foreach($characters as $character=>$data) {
+		$json = json_decode(
+			curl_multi_getcontent($characters[$character])
+		);
+
+		// merge the two ragnaros bosses
+		$bosses = $json->progression->raids[$currentInstance]->bosses;
+		$bosses[6]->heroicKills = $bosses[7]->heroicKills;
+		unset($bosses[7]);
+		
+		// find the boss with the lowest kills
+		$leastN = 1000;
+		$leastH = 1000;
+		foreach($bosses as $boss) {
+			if(($boss->normalKills + $boss->heroicKills) < $leastN) $leastN = $boss->normalKills + $boss->heroicKills;
+			if($boss->heroicKills < $leastH) $leastH = $boss->heroicKills;
+		}
+		
+		$characterData[$character] = array(
+			'name'			=> $character,
+			'level'			=> $json->level,
+			'class'			=> $json->class,
+			'progression'	=> array('n' => $leastN, 'h' => $leastH),
+		);
+	}
+
+	return $characterData;
+}
+
 
 //***************************************************************************//
 //	Helper functions
@@ -175,6 +238,18 @@ function curl_request($url) {
 	curl_close($curl);
 	
 	return $contents;
+}
+
+function curl_prep($url) {
+	$curl = curl_init();
+	
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+	curl_setopt($curl, CURLOPT_ENCODING, 'gzip');
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+	
+	return $curl;
 }
 
 function urlify($string) {
