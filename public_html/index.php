@@ -5,7 +5,7 @@ $data = json_decode(file_get_contents('../data/index.txt'));
 // retrieve links from database
 $db_config = json_decode(file_get_contents('../conf/database.conf'));
 include('lib/database.php');
-$db = new Database($db_config->hostname,$db_config->username,$db_config->password,$db_config->table);
+$db = new Database($db_config->hostname,$db_config->username,$db_config->password,$db_config->database);
 
 $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHERE status = 2 OR status = 3 ORDER BY released_date DESC LIMIT 15");
 ?><!DOCTYPE HTML>
