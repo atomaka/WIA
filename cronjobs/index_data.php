@@ -5,7 +5,7 @@
 //***************************************************************************//
 
 $dataSources = array(
-	//function,				cache_duration
+	//function,		cache_duration
 	'twitter'		=> 300,
 	'github'		=> 300,
 	'hulu'			=> 600,
@@ -80,7 +80,7 @@ function github() {
 
 function lastfm() {
 	$url = 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=atomaka&limit=1&api_key=27ea07733c17562cf1fe512586954825';
-	$xml = simplexml_load_string(file_get_contents($url));
+	$xml = simplexml_load_file($url);
 	$latestSong = $xml->recenttracks->track[0];
 	
 	$timeSince = ((bool)$latestSong->attributes()->nowplaying) ? 
@@ -117,7 +117,7 @@ function sc2ranks() {
 
 function hulu() {
 	$url = 'http://www.hulu.com/feed/history/atomaka';
-	$xml = simplexml_load_string(file_get_contents($url));
+	$xml = simplexml_load_file($url);
 
 	// data for last show
 	$lastShow = $xml->channel->item[0];
@@ -137,7 +137,7 @@ function hulu() {
 
 function steam() {
 	$url = 'http://steamcommunity.com/profiles/76561197993725971/?xml=1';
-	$xml = simplexml_load_string(file_get_contents($url));
+	$xml = simplexml_load_file($url);
 
 	// find the most recently played games
 	$recentGames = array();
@@ -176,11 +176,11 @@ function curl_request($url) {
 
 function time_since($time) {
     $periods = array(
-		'minute'		=>  60,
-		'hour'			=>	60 * 60,
-		'day'			=>	60 * 60 * 24,
-		'week'			=>	60 * 60 * 24 * 7,
-		'month'			=>	60 * 60 * 24 * 30,
+		'minute'		=> 60,
+		'hour'			=> 60 * 60,
+		'day'			=> 60 * 60 * 24,
+		'week'			=> 60 * 60 * 24 * 7,
+		'month'			=> 60 * 60 * 24 * 30,
 		'year'			=> 60 * 60 * 24 * 365,
 	);
     
@@ -188,8 +188,7 @@ function time_since($time) {
     $since = $now - $time;
 
 	$formatted_since = array($since,'seconds');
-	foreach($periods as $period => $seconds)
-	{
+	foreach($periods as $period => $seconds) {
 		$quotient = floor($since / $seconds);
 		
 		if($quotient >= 1)	$formatted_since = array($quotient,$period);
