@@ -14,25 +14,22 @@ $dataSources = array(
 	'steam'			=> 3600,
 );
 
+$cacheData = json_decode(file_get_contents('../data/cache.txt'),true);
 $sourceData = json_decode(file_get_contents('../data/index.txt'),true);
 foreach($dataSources as $dataSource=>$refreshTime) {
-	$file = sprintf('../cache/%s.txt', $dataSource);
 	// check last time the data was updated
-	if(file_exists($file)) {
-		$lastModified = filemtime($file);
-	} else {
-		$lastModified = 0;
-	}
+	$lastModified = (array_key_exists($dataSource, $cacheData)) ?
+		$cacheData[$dataSource] : 0;
 	
 	// and see if we need to retrieve new information
 	if(time() - $lastModified > $refreshTime) {
-		file_put_contents($file,time());
+		$cacheData[$dataSource] = time();
 		
 		$sourceData[$dataSource] = call_user_func($dataSource);
 	}
 }
 
-print_r($sourceData);
+file_put_contents('../data/cache.txt',json_encode($cacheData));
 file_put_contents('../data/index.txt',json_encode($sourceData));
 
 
