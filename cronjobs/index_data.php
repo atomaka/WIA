@@ -3,6 +3,15 @@
 //	index_data.php
 //	Collect data from various services and store locally for later display.
 //***************************************************************************//
+if($_SERVER['SERVER_NAME'] == 'localhost') {
+	$CACHE_FILE = '../data/cache.txt';
+	$DATA_FILE = '../data/index.txt';
+} else {
+	chdir('/home/atomaka/data');
+	
+	$CACHE_FILE = 'cache.txt';
+	$DATA_FILE = 'index.txt';
+}
 
 $dataSources = array(
 	//function,		cache_duration
@@ -14,8 +23,8 @@ $dataSources = array(
 	'steam'			=> 3600,
 );
 
-$cacheData = json_decode(file_get_contents('../data/cache.txt'),true);
-$sourceData = json_decode(file_get_contents('../data/index.txt'),true);
+$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
+$sourceData = json_decode(file_get_contents($DATA_FILE),true);
 foreach($dataSources as $dataSource=>$refreshTime) {
 	// check last time the data was updated
 	$lastModified = (array_key_exists($dataSource, $cacheData)) ?
@@ -28,9 +37,9 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 		$sourceData[$dataSource] = call_user_func($dataSource);
 	}
 }
-print_r($sourceData);
-file_put_contents('../data/cache.txt',json_encode($cacheData));
-file_put_contents('../data/index.txt',json_encode($sourceData));
+
+file_put_contents($CACHE_FILE,json_encode($cacheData));
+file_put_contents($DATA_FILE,json_encode($sourceData));
 
 
 //***************************************************************************//
