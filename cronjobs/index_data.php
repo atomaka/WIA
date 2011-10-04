@@ -28,7 +28,7 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 		$sourceData[$dataSource] = call_user_func($dataSource);
 	}
 }
-
+print_r($sourceData);
 file_put_contents('../data/cache.txt',json_encode($cacheData));
 file_put_contents('../data/index.txt',json_encode($sourceData));
 
@@ -72,6 +72,7 @@ function github() {
 	return array(
 		'commit'	=> $commits[0]->commit->message,
 		'repo'		=> $repos[0]->name,
+		'url'		=> $commits[0]->commit->url,
 	);
 }
 
