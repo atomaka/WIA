@@ -53,16 +53,14 @@ function twitter() {
 	if(empty($tweetInfo)) {
 		return array(
 			'text'		=> 'Last post was a retweet and cannot be listed.',
-			'timeSince'	=> 0,
+			'time'		=> 0,
 		);
 	} else {
 		$tweet = urlify($tweetInfo->text);
-		$timeSince = ($tweetInfo->created_at != 0) ? 
-			time_since(strtotime($tweetInfo->created_at)) : 0;
 		
 		return array(
 			'text'		=> $tweet,
-			'timeSince'	=> $timeSince,
+			'time'		=> strtotime($tweetInfo->created_at),
 		);
 	}
 }
@@ -82,7 +80,7 @@ function github() {
 	return array(
 		'commit'	=> $commits[0]->commit->message,
 		'repo'		=> $repos[0]->name,
-		'url'		=> $commits[0]->commit->url,
+		'url'		=> $repos[0]->html_url,
 	);
 }
 
@@ -91,15 +89,13 @@ function lastfm() {
 	$xml = simplexml_load_file($url);
 	$latestSong = $xml->recenttracks->track[0];
 	
-	$timeSince = ((bool)$latestSong->attributes()->nowplaying) ? 
-		'Listening now' : time_since(strtotime($latestSong->date . ' UTC')) . ' ago';
 	$cover = (is_array($latestSong->image)) ? 
 		'img/lastfm/blank_album64.png' : (string)$latestSong->image[1];
 	
 	return array(
 		'song'			=> (string)$latestSong->name,
 		'artist'		=> (string)$latestSong->artist,
-		'timeSince'		=> $timeSince,
+		'time'			=> strtotime($latestSong->date . ' UTC'),
 		'url'			=> (string)$latestSong->url,
 		'cover'			=> $cover,
 	);
@@ -129,15 +125,14 @@ function hulu() {
 
 	// data for last show
 	$lastShow = $xml->channel->item[0];
-	
-	$timeSince = time_since(strtotime($lastShow->pubDate));
+
 	$title = explode(' - ', $lastShow->title);
 	preg_match('/<img src="(.*)" align="right"/',(string)$lastShow->description,$thumb);
 
 	return array(
 		'title'			=> $title[2],
 		'series'		=> $title[0],
-		'timeSince'		=> $timeSince,
+		'time'			=> strtotime($lastShow->pubDate),
 		'url'			=> (string)$lastShow->link,
 		'thumb'			=> $thumb[1],
 	);
@@ -180,31 +175,6 @@ function curl_request($url) {
 	curl_close($curl);
 	
 	return $contents;
-}
-
-function time_since($time) {
-    $periods = array(
-		'minute'		=> 60,
-		'hour'			=> 60 * 60,
-		'day'			=> 60 * 60 * 24,
-		'week'			=> 60 * 60 * 24 * 7,
-		'month'			=> 60 * 60 * 24 * 30,
-		'year'			=> 60 * 60 * 24 * 365,
-	);
-    
-    $now = time();
-    $since = $now - $time;
-
-	$formatted_since = array($since,'seconds');
-	foreach($periods as $period => $seconds) {
-		$quotient = floor($since / $seconds);
-		
-		if($quotient >= 1)	$formatted_since = array($quotient,$period);
-		else break;
-	}
-	
-	if($formatted_since[0] > 1) $formatted_since[1] .= 's';
-	return implode(' ',$formatted_since);
 }
 
 function urlify($string) {

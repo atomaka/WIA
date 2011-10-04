@@ -38,7 +38,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 				<div id="twitter" class="box">
 					<span class="right"><a href="http://www.twitter.com/atomaka"><img src="img/badges/twitter.png" class="icon" alt="Follow me on Twitter"/></a></span>
 					<span class="tweet"><?php echo $data->twitter->text ?></span><br/>
-					<?php if($data->twitter->timeSince != 0) { echo $data->twitter->timeSince ?> ago <?php } ?>
+					<?php if($data->twitter->time != 0) { echo time_since($data->twitter->time) ?> ago <?php } ?>
 				</div>
 				<br/>
 				<h2>github</h2>
@@ -96,7 +96,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Last.fm" /></a></span>
 								<a href="<?php echo $data->lastfm->url ?>"><?php echo $data->lastfm->song ?></a><br/>
 								by <?php echo $data->lastfm->artist ?><br/><br/>
-								<?php echo $data->lastfm->timeSince ?><br/>
+								<?php echo time_since($data->lastfm->time) ?><br/>
 							</td>
 						</tr>
 					</table>
@@ -111,7 +111,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 								<span class="right"><a href="http://www.hulu.com/profiles/atomaka"><img src="img/badges/hulu.png" class="icon" alt="Hulu" /></a></span>
 								<a href="<?php echo $data->hulu->url ?>"><?php echo $data->hulu->series ?></a><br/>
 								from <?php echo $data->hulu->title ?><br/><br/>
-								<?php echo $data->hulu->timeSince ?> ago<br/>
+								<?php echo time_since($data->hulu->time) ?> ago<br/>
 							</td>
 						</tr>
 					</table>
@@ -207,4 +207,29 @@ $(document).ready(function() {
 
 		</script>
 	</body>
-</html>
+</html><?php
+function time_since($time) {
+    $periods = array(
+		'minute'		=> 60,
+		'hour'			=> 60 * 60,
+		'day'			=> 60 * 60 * 24,
+		'week'			=> 60 * 60 * 24 * 7,
+		'month'			=> 60 * 60 * 24 * 30,
+		'year'			=> 60 * 60 * 24 * 365,
+	);
+    
+    $now = time();
+    $since = $now - $time;
+
+	$formatted_since = array($since,'seconds');
+	foreach($periods as $period => $seconds) {
+		$quotient = floor($since / $seconds);
+		
+		if($quotient >= 1)	$formatted_since = array($quotient,$period);
+		else break;
+	}
+	
+	if($formatted_since[0] > 1) $formatted_since[1] .= 's';
+	return implode(' ',$formatted_since);
+}
+?>
