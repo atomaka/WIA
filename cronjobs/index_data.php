@@ -1,6 +1,7 @@
 <?php
 //***************************************************************************//
-//	index_data.php
+//	index_data.php - schedule on the system:
+//	* * * * * php cronjobs/index_data.php >/dev/null 2>&1
 //	Collect data from various services and store locally for later display.
 //***************************************************************************//
 if($_SERVER['SERVER_NAME'] == 'localhost') {
