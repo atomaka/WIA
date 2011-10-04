@@ -35,17 +35,19 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 				</div>
 				<br/>
 				<h2>twitter</h2>
-				<div id="twitter" class="box">
+				<div id="twitter" class="box iconized">
 					<span class="right"><a href="http://www.twitter.com/atomaka"><img src="img/badges/twitter.png" class="icon" alt="Follow me on Twitter"/></a></span>
 					<span class="tweet"><?php echo $data->twitter->text ?></span><br/>
 					<?php if($data->twitter->time != 0) { echo time_since($data->twitter->time) ?> ago <?php } ?>
 				</div>
 				<br/>
 				<h2>github</h2>
-				<div id="github" class="box">
+				<div id="github" class="box iconized">
+					<span class="right"><a href="http://www.github.com/atomaka"><img src="img/badges/github.png" class="icon" alt="Follow me on Github"/></a></span>
 					Committed &quot;<?php echo $data->github->commit ?>&quot;
-					on <a href="<?php echo $data->github->url ?>"><?php echo $data->github->repo ?></a>.<br/>
+					on <a href="<?php echo $data->github->url ?>"><?php echo $data->github->repo ?></a>.
 				</div>
+				
 				<br/>
 				<h2>projects</h2>
 				<h3>project 1</h3>
@@ -177,18 +179,9 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 
 		<div id="copyright">&copy; Andrew Tomaka 2010-2011. [ <a href="admin">admin</a> ]</div>
 		<br/><br/>
-		<script type="text/javascript" src="js/niftycube.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script> 
 		<script type="text/javascript" src="js/jquery.qtip-1.0.0-rc3.min.js"></script>
-		<script type="text/javascript">
-window.onload=function() {
-	Nifty("div#content","big");
-	Nifty("div#about,div#contacts,div#twitter,div#github,div#tomtvgrid,div#blog,div#sc2mmr,");
-	Nifty("div#lastfm,div#hulu,div#wow,div#sc2,div#steam,div#sc2mmr,div#fitness");
-	Nifty("div#projects p");
-	Nifty("div#random p");
-}
-		</script>
+		<script type="text/javascript" src="js/jquery.corner.js"></script>
 		<script type="text/javascript">	
 $(document).ready(function() {
 	$('img[title]').qtip({ 
@@ -201,7 +194,10 @@ $(document).ready(function() {
 			},
 			color: '#216332'
 		} 
-	})
+	});
+	
+	$('#content').corner();
+	$('.box').corner('5px');
 });
 
 
