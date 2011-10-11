@@ -98,7 +98,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Last.fm" /></a></span>
 								<a href="<?php echo $data->lastfm->url ?>"><?php echo $data->lastfm->song ?></a><br/>
 								by <?php echo $data->lastfm->artist ?><br/><br/>
-								<?php echo time_since($data->lastfm->time) ?><br/>
+								<?php echo time_since($data->lastfm->time) ?> ago<br/>
 							</td>
 						</tr>
 					</table>
