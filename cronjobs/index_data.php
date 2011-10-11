@@ -22,7 +22,7 @@ $dataSources = array(
 	'lastfm'		=> 60,
 	'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
-	'wow'			=> 43200,
+	//'wow'			=> 43200,
 );
 
 $cacheData = json_decode(file_get_contents($CACHE_FILE),true);
@@ -57,11 +57,11 @@ function twitter() {
 			'time'		=> 0,
 		);
 	} else {
-		$tweet = urlify($tweetInfo->text);
+		$tweet = urlify($tweetInfo[0]->text);
 		
 		return array(
 			'text'		=> $tweet,
-			'time'		=> strtotime($tweetInfo->created_at),
+			'time'		=> strtotime($tweetInfo[0]->created_at),
 		);
 	}
 }
