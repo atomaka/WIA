@@ -101,11 +101,15 @@ function lastfm() {
 	
 	$cover = (is_array($latestSong->image)) ? 
 		'img/lastfm/blank_album64.png' : (string)$latestSong->image[1];
+	$time = (isset($latestSong->attributes()->nowplaying) && (bool)$latestSong->attributes()->nowplaying) ?
+		0 : strtotime($latestSong->date . ' UTC');
+		
+	print_r($time);
 	
 	return array(
 		'song'			=> (string)$latestSong->name,
 		'artist'		=> (string)$latestSong->artist,
-		'time'			=> strtotime($latestSong->date . ' UTC'),
+		'time'			=> $time,
 		'url'			=> (string)$latestSong->url,
 		'cover'			=> $cover,
 	);

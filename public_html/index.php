@@ -98,7 +98,7 @@ while($link = $links->fetch_object()) {
 								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Andrew Tomaka's Last.fm" /></a></span>
 								<a href="<?php echo $data->lastfm->url ?>"><?php echo $data->lastfm->song ?></a><br/>
 								by <?php echo $data->lastfm->artist ?><br/><br/>
-								<?php echo time_since($data->lastfm->time) ?> ago<br/>
+								<?php echo ($data->lastfm->time == 0) ? 'currently playing' : time_since($data->lastfm->time) . 'ago' ?><br/>
 							</td>
 						</tr>
 					</table>
