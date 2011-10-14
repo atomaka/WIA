@@ -150,6 +150,15 @@ table.formatting {
 	
 }
 
+table.classformatting {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+td.classformatting {
+	padding: 0;
+}
+
 td.formatting {
 	padding: 0;
 	width: 68px;
