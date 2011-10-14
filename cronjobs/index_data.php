@@ -103,8 +103,7 @@ function lastfm() {
 		'img/lastfm/blank_album64.png' : (string)$latestSong->image[1];
 	$time = (isset($latestSong->attributes()->nowplaying) && (bool)$latestSong->attributes()->nowplaying) ?
 		0 : strtotime($latestSong->date . ' UTC');
-		
-	print_r($time);
+
 	
 	return array(
 		'song'			=> (string)$latestSong->name,
