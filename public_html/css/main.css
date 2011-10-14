@@ -19,8 +19,9 @@ a {
 }
 
 h1 {
-	font-size: 48px;
+	font-size: 1px;
 	font-weight: bold;
+	visibility: hidden;
 }
 
 h2  {

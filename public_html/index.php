@@ -13,37 +13,37 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 	<head>
 		<meta charset="utf-8" />
 		<title>Who is Andrew?</title>
-		<link rel="stylesheet" type="text/css" href="css/main.css?v=1" />
+		<link rel="stylesheet" type="text/css" href="css/main.css?v=2" />
 		<link rel="shortcut icon" href="favicon.ico" />
 	</head>	
 	<body>
-		<!--<div id="header"><h1>who is andrew?</h1></div>-->
+		<!--<div id="header">--><h1>who is andrew?</h1><!--</div>-->
 		<br/><br/>
 	
 		<div id="content">
 			<div id="column1a">
 				<h2>contact</h2>
 				<div id="contacts" class="box center">
-					<img src="img/badges/email.png" class="contact" alt="Email" title="atomaka@gmail.com" />
-					<img src="img/badges/aim.png" class="contact" alt="AIM" title="atomaka" />
-					<img src="img/badges/yahoo.png" class="contact" alt="Yahoo!" title="atomaka" />
-					<img src="img/badges/msn.png" class="contact" alt="MSN" title="atomaka@hotmail.com" />
-					<img src="img/badges/icq.png" class="contact" alt="ICQ" title="12534325" />
-					<img src="img/badges/google.png" class="contact" alt="Google Messaging" title="atomaka@gmail.com" />
-					<img src="img/badges/skype.png" class="contact" alt="Skype" title="andrewtomaka" />
+					<img src="img/badges/email.png" class="contact" alt="Email Andrew Tomaka" title="atomaka@gmail.com" />
+					<img src="img/badges/aim.png" class="contact" alt="AIM Andrew Tomaka" title="atomaka" />
+					<img src="img/badges/yahoo.png" class="contact" alt="Yahoo! Andrew Tomaka" title="atomaka" />
+					<img src="img/badges/msn.png" class="contact" alt="MSN Andrew Tomaka" title="atomaka@hotmail.com" />
+					<img src="img/badges/icq.png" class="contact" alt="ICQ Andrew Tomaka" title="12534325" />
+					<img src="img/badges/google.png" class="contact" alt="Google Messaging Andrew Tomaka" title="atomaka@gmail.com" />
+					<img src="img/badges/skype.png" class="contact" alt="Skype Andrew Tomaka" title="andrewtomaka" />
 					<div id="contact"></div>  
 				</div>
 				<br/>
 				<h2>twitter</h2>
 				<div id="twitter" class="box iconized">
-					<span class="right"><a href="http://www.twitter.com/atomaka"><img src="img/badges/twitter.png" class="icon" alt="Follow me on Twitter"/></a></span>
+					<span class="right"><a href="http://www.twitter.com/atomaka"><img src="img/badges/twitter.png" class="icon" alt="Follow Andrew Tomaka on Twitter"/></a></span>
 					<span class="tweet"><?php echo $data->twitter->text ?></span><br/>
 					<?php if($data->twitter->time != 0) { echo time_since($data->twitter->time) ?> ago <?php } ?>
 				</div>
 				<br/>
 				<h2>github</h2>
 				<div id="github" class="box iconized">
-					<span class="right"><a href="http://www.github.com/atomaka"><img src="img/badges/github.png" class="icon" alt="Follow me on Github"/></a></span>
+					<span class="right"><a href="http://www.github.com/atomaka"><img src="img/badges/github.png" class="icon" alt="Follow Andrew Tomaka on Github"/></a></span>
 					Committed &quot;<?php echo $data->github->commit ?>&quot;
 					on <a href="<?php echo $data->github->url ?>"><?php echo $data->github->repo ?></a>.
 				</div>
@@ -95,7 +95,7 @@ while($link = $links->fetch_object()) {
 								<img src="<?php echo $data->lastfm->cover; ?>" class="cover" alt="<?php echo $data->lastfm->artist ?> - <?php echo $data->lastfm->name ?>"/>
 							</td>
 							<td class="top">
-								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Last.fm" /></a></span>
+								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Andrew Tomaka's Last.fm" /></a></span>
 								<a href="<?php echo $data->lastfm->url ?>"><?php echo $data->lastfm->song ?></a><br/>
 								by <?php echo $data->lastfm->artist ?><br/><br/>
 								<?php echo time_since($data->lastfm->time) ?> ago<br/>
@@ -110,7 +110,7 @@ while($link = $links->fetch_object()) {
 								<img src="<?php echo $data->hulu->thumb ?>" class="cover" alt="<?php echo $data->hulu->title ?> - <?php echo $data->hulu->series ?>" />
 							</td>
 							<td class="top">
-								<span class="right"><a href="http://www.hulu.com/profiles/atomaka"><img src="img/badges/hulu.png" class="icon" alt="Hulu" /></a></span>
+								<span class="right"><a href="http://www.hulu.com/profiles/atomaka"><img src="img/badges/hulu.png" class="icon" alt="Andrew Tomaka's Hulu" /></a></span>
 								<a href="<?php echo $data->hulu->url ?>"><?php echo $data->hulu->title ?></a><br/>
 								from <?php echo $data->hulu->series ?><br/><br/>
 								<?php echo time_since($data->hulu->time) ?> ago<br/>
