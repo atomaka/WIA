@@ -4,7 +4,7 @@
 //	* * * * * php cronjobs/index_data.php >/dev/null 2>&1
 //	Collect data from various services and store locally for later display.
 //***************************************************************************//
-if($_SERVER['SERVER_NAME'] == 'localhost') {
+if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
 	$CACHE_FILE = '../data/cache.txt';
 	$DATA_FILE = '../data/index.txt';
 } else {
