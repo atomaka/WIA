@@ -111,8 +111,8 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 							</td>
 							<td class="top">
 								<span class="right"><a href="http://www.hulu.com/profiles/atomaka"><img src="img/badges/hulu.png" class="icon" alt="Hulu" /></a></span>
-								<a href="<?php echo $data->hulu->url ?>"><?php echo $data->hulu->series ?></a><br/>
-								from <?php echo $data->hulu->title ?><br/><br/>
+								<a href="<?php echo $data->hulu->url ?>"><?php echo $data->hulu->title ?></a><br/>
+								from <?php echo $data->hulu->series ?><br/><br/>
 								<?php echo time_since($data->hulu->time) ?> ago<br/>
 							</td>
 						</tr>

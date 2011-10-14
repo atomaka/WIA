@@ -22,7 +22,7 @@ $dataSources = array(
 	'lastfm'		=> 60,
 	'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
-	//'wow'			=> 43200,
+	'wow'			=> 43200,
 );
 
 $cacheData = json_decode(file_get_contents($CACHE_FILE),true);
@@ -131,8 +131,8 @@ function hulu() {
 	preg_match('/<img src="(.*)" align="right"/',(string)$lastShow->description,$thumb);
 
 	return array(
-		'title'			=> $title[2],
-		'series'		=> $title[0],
+		'series'		=> isset($title[2]) ? $title[2] : 'Not Available',
+		'title'			=> $title[0],
 		'time'			=> strtotime($lastShow->pubDate),
 		'url'			=> (string)$lastShow->link,
 		'thumb'			=> $thumb[1],
