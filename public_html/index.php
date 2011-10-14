@@ -92,7 +92,7 @@ while($link = $links->fetch_object()) {
 					<table class="formatting">
 						<tr>
 							<td class="formatting">
-								<img src="<?php echo $data->lastfm->cover; ?>" class="cover" alt="<?php echo $data->lastfm->artist ?> - <?php echo $data->lastfm->name ?>"/>
+								<img src="<?php echo $data->lastfm->cover; ?>" class="cover" alt="<?php echo $data->lastfm->artist ?> - <?php echo $data->lastfm->song ?>"/>
 							</td>
 							<td class="top">
 								<span class="right"><a href="http://last.fm/user/atomaka"><img src="img/badges/lastfm.png" class="icon" alt="Andrew Tomaka's Last.fm" /></a></span>
