@@ -22,7 +22,7 @@ $dataSources = array(
 	'lastfm'		=> 60,
 	'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
-	'wow'			=> 43200,
+	'wow'			=> 0 //43200,
 );
 
 if(file_exists($CACHE_FILE)) {
@@ -171,6 +171,18 @@ function steam() {
 }
 
 function wow() {
+	$CLASSES = array(
+		6		=> 'deathknight',
+		5		=> 'priest',
+		11		=> 'druid',
+		4		=> 'rogue',
+		8		=> 'mage',
+		7		=> 'shaman',
+		1		=> 'warrior',
+		9		=> 'warlock',
+		3		=> 'hunter',
+	);
+	
 	$benchmark_start = time();
 	$characters = array(
 		'Gaffer'		=> false,
@@ -188,7 +200,7 @@ function wow() {
 	// build our mutli curl request
 	$mh = curl_multi_init();
 	foreach($characters as $character=>$data) {
-		$url = sprintf('http://us.battle.net/api/wow/character/crushridge/%s?fields=progression',
+		$url = sprintf('http://us.battle.net/api/wow/character/crushridge/%s?fields=progression,talents',
 			$character);
 			
 		$characters[$character] = curl_prep($url);
@@ -217,17 +229,32 @@ function wow() {
 		$leastN = 1000;
 		$leastH = 1000;
 		foreach($bosses as $boss) {
+			if($boss->normalKills == -1) $boss->normalKills = 0;
 			if(($boss->normalKills + $boss->heroicKills) < $leastN) $leastN = $boss->normalKills + $boss->heroicKills;
 			if($boss->heroicKills < $leastH) $leastH = $boss->heroicKills;
+		}
+
+		//find our active talent tree
+		$spec = null;
+		foreach($json->talents as $talent) {
+			if(isset($talent->selected)) {
+				$spec = $talent;
+				break;
+			}
 		}
 		
 		$characterData[$character] = array(
 			'name'			=> $character,
 			'level'			=> $json->level,
-			'class'			=> $json->class,
-			'progression'	=> array('n' => $leastN, 'h' => $leastH),
+			'class'			=> $CLASSES[$json->class],
+			'progression'	=> $leastH > 0 ? $leastH * 100 : $leastN,
+			'armory'		=> sprintf('http://us.battle.net/wow/en/character/crushridge/%s/advanced',$character),
+			'spec_icon'		=> $talent->icon,
+			'spec_name'		=> $talent->name,
 		);
 	}
+	
+	usort(&$characterData,'progression_sort');
 
 	return $characterData;
 }
@@ -268,6 +295,10 @@ function urlify($string) {
 
 function github_sort($a, $b) {
 	return strtotime($a->pushed_at) < strtotime($b->pushed_at);
+}
+
+function progression_sort($a, $b) {
+	return $a['progression'] < $b['progression'];
 }
 
 ?>

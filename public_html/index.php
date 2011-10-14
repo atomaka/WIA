@@ -13,7 +13,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 	<head>
 		<meta charset="utf-8" />
 		<title>Who is Andrew?</title>
-		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css?v=1" />
 		<link rel="shortcut icon" href="favicon.ico" />
 	</head>	
 	<body>
@@ -71,14 +71,14 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 				<h2>random</h2>
 				<div id="random">
 <?php
-	while($link = $links->fetch_object()) {
-		$link_text = $link->text;
-		
-		$link_text = preg_replace('/\[/','<a href="' . htmlentities($link->url) . '">',$link_text);
-		$link_text = preg_replace('/\]/','</a>',$link_text);
-		
-		echo '					<p class="box">' . $link_text . '</p>' . "\n";
-	}
+while($link = $links->fetch_object()) {
+	$link_text = $link->text;
+	
+	$link_text = preg_replace('/\[/','<a href="' . htmlentities($link->url) . '">',$link_text);
+	$link_text = preg_replace('/\]/','</a>',$link_text);
+	
+	echo '					<p class="box">' . $link_text . '</p>' . "\n";
+}
 ?>				
 				</div>
 			</div>
@@ -126,14 +126,22 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 						<tr>
 							<td class="gamesformatting"><a href="http://battle.net/wow"><img src="img/badges/wow.jpg" alt="World of Warcraft" /></a></td>
 							<td class="top">
-								<a href="http://us.battle.net/wow/en/character/crushridge/veincane/advanced">Veincane</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/gaffer/advanced">Gaffer</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/ttg/advanced">Ttg</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/getburnt/advanced">Getburnt</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/levita/advanced">Levita</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/toppazz/advanced">Toppazz</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/toopro/advanced">Toopro</a>, 
-								<a href="http://us.battle.net/wow/en/character/crushridge/notgaffer/advanced">Notgaffer</a>.<br/><br/> 
+								<table class="classformatting">
+									<tr>
+<?php
+foreach($data->wow as $character) {
+	echo sprintf('										<td class="classformatting"><a href="%s"><img src="http://wow.zamimg.com/images/wow/icons/small/class_%s.jpg" alt="%s" /></a></td>' . "\n",$character->armory,$character->class,$character->name);
+}
+?>
+									</tr>
+									<tr>
+<?php
+foreach($data->wow as $character) {
+	echo sprintf('										<td class="classformatting"><img src="http://wow.zamimg.com/images/wow/icons/small/%s.jpg" alt="%s" /></td>' . "\n",$character->spec_icon,$character->class,$character->spec_name);
+}
+?>									
+									</tr>
+								</table>
 							</td>
 						</tr>
 					</table>
