@@ -25,8 +25,17 @@ $dataSources = array(
 	'wow'			=> 43200,
 );
 
-$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
-$sourceData = json_decode(file_get_contents($DATA_FILE),true);
+if(file_exists($CACHE_FILE)) {
+	$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
+} else {
+	$cacheData = array();
+}
+if(file_exists($DATA_FILE)) {
+	$sourceData = json_decode(file_get_contents($DATA_FILE),true);
+} else {
+	$sourceData = array();
+}
+
 foreach($dataSources as $dataSource=>$refreshTime) {
 	// check last time the data was updated
 	$lastModified = (array_key_exists($dataSource, $cacheData)) ?
