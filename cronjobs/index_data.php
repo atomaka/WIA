@@ -22,7 +22,7 @@ $dataSources = array(
 	'lastfm'		=> 60,
 	'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
-	'wow'			=> 0 //43200,
+	'wow'			=> 43200,
 );
 
 if(file_exists($CACHE_FILE)) {
