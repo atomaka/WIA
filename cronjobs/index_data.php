@@ -4,14 +4,22 @@
 //	* * * * * php cronjobs/index_data.php >/dev/null 2>&1
 //	Collect data from various services and store locally for later display.
 //***************************************************************************//
+$startTime = time();
+$interruptedExecution = false;
+register_shutdown_function('shutdown');
+clearstatcache();
+
 if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
 	$CACHE_FILE = '../data/cache.txt';
 	$DATA_FILE = '../data/index.txt';
+	$LOCK_FILE = getcwd() . '/../data/whoisandrew.lock';
 } else {
 	chdir('/home/atomaka/data');
 	
 	$CACHE_FILE = 'cache.txt';
 	$DATA_FILE = 'index.txt';
+	// path changes in the shutdown() function so we need the full path
+	$LOCK_FILE = '/home/atomaka/data/whoisandrew.lock';
 }
 
 $dataSources = array(
@@ -24,6 +32,15 @@ $dataSources = array(
 	'steam'			=> 3600,
 	'wow'			=> 43200,
 );
+
+if(!file_exists($LOCK_FILE)) {
+	touch($LOCK_FILE);
+} else {
+	$interruptedExecution = true;
+	exit();
+}
+
+while(true) { }
 
 if(file_exists($CACHE_FILE)) {
 	$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
@@ -302,6 +319,15 @@ function github_sort($a, $b) {
 
 function progression_sort($a, $b) {
 	return $a['progression'] < $b['progression'];
+}
+
+function shutdown() {
+	global $interruptedExecution, $LOCK_FILE, $startTime;
+	if(!$interruptedExecution) {
+		unlink($LOCK_FILE);
+	}
+
+	$completionTime = time() - $startTime;
 }
 
 ?>
