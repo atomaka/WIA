@@ -337,7 +337,7 @@ function shutdown() {
 		unlink($LOCK_FILE);
 	} else {
 		$errorTime = time();
-		$query = "INSERT INTO wia_log (time,type,description) VALUES($errorTime,
+		$query = "INSERT INTO wia_log (time,type,description) VALUES(NOW(),
 			'warning',
 			'The script attempted to run while another copy was already processing')";
 		$db->query($query);
@@ -345,10 +345,13 @@ function shutdown() {
 
 	$completionTime = time() - $startTime;
 
-	if($completionTime >= ini_get('max_execution_time')) {
+	if($completionTime >= ini_get('max_execution_time') &&
+		ini_get('max_execution_time') != 0) {
 		$errorTime = time();
-		$query = "INSERT INTO wia_log (time,type,description) VALUES($errorTime,
-			'warning','The script reached the maximum execution time.')";
+		$message = 'The script reached the maximum execution time: ' . 
+			$completionTime;
+		$query = "INSERT INTO wia_log (time,type,description) VALUES(NOW(),
+			'warning','$message')";
 		$db->query($query);
 	}
 }
