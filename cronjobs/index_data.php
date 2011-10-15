@@ -10,12 +10,14 @@ register_shutdown_function('shutdown');
 clearstatcache();
 
 if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
+	$DATABASE_FILE = getcwd() . '/../conf/database.conf';
 	$CACHE_FILE = '../data/cache.txt';
 	$DATA_FILE = '../data/index.txt';
 	$LOCK_FILE = getcwd() . '/../data/whoisandrew.lock';
 } else {
 	chdir('/home/atomaka/data');
 	
+	$DATABASE_FILE = '/home/atomaka/conf/database.conf';
 	$CACHE_FILE = 'cache.txt';
 	$DATA_FILE = 'index.txt';
 	// path changes in the shutdown() function so we need the full path
@@ -39,8 +41,6 @@ if(!file_exists($LOCK_FILE)) {
 	$interruptedExecution = true;
 	exit();
 }
-
-while(true) { }
 
 if(file_exists($CACHE_FILE)) {
 	$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
@@ -118,7 +118,8 @@ function lastfm() {
 	
 	$cover = (is_array($latestSong->image)) ? 
 		'img/lastfm/blank_album64.png' : (string)$latestSong->image[1];
-	$time = (isset($latestSong->attributes()->nowplaying) && (bool)$latestSong->attributes()->nowplaying) ?
+	$time = (isset($latestSong->attributes()->nowplaying) && 
+		(bool)$latestSong->attributes()->nowplaying) ?
 		0 : strtotime($latestSong->date . ' UTC');
 
 	
@@ -157,7 +158,8 @@ function hulu() {
 	$lastShow = $xml->channel->item[0];
 
 	$title = explode(' - ', $lastShow->title);
-	preg_match('/<img src="(.*)" align="right"/',(string)$lastShow->description,$thumb);
+	preg_match('/<img src="(.*)" align="right"/',(string)$lastShow->description,
+		$thumb);
 
 	return array(
 		'series'		=> isset($title[2]) ? $title[2] : 'Not Available',
@@ -250,7 +252,9 @@ function wow() {
 		$leastH = 1000;
 		foreach($bosses as $boss) {
 			if($boss->normalKills == -1) $boss->normalKills = 0;
-			if(($boss->normalKills + $boss->heroicKills) < $leastN) $leastN = $boss->normalKills + $boss->heroicKills;
+			if(($boss->normalKills + $boss->heroicKills) < $leastN) {
+				$leastN = $boss->normalKills + $boss->heroicKills;
+			}
 			if($boss->heroicKills < $leastH) $leastH = $boss->heroicKills;
 		}
 
@@ -322,12 +326,31 @@ function progression_sort($a, $b) {
 }
 
 function shutdown() {
-	global $interruptedExecution, $LOCK_FILE, $startTime;
+	global $interruptedExecution, $startTime, $LOCK_FILE, $DATABASE_FILE;
+	
+	$db_conf = json_decode(file_get_contents($DATABASE_FILE));
+	$db = mysqli_init();
+	$db->real_connect($db_conf->hostname,$db_conf->username,$db_conf->password,
+		$db_conf->database);
+	
 	if(!$interruptedExecution) {
 		unlink($LOCK_FILE);
+	} else {
+		$errorTime = time();
+		$query = "INSERT INTO wia_log (time,type,description) VALUES($errorTime,
+			'warning',
+			'The script attempted to run while another copy was already processing')";
+		$db->query($query);
 	}
 
 	$completionTime = time() - $startTime;
+
+	if($completionTime >= ini_get('max_execution_time')) {
+		$errorTime = time();
+		$query = "INSERT INTO wia_log (time,type,description) VALUES($errorTime,
+			'warning','The script reached the maximum execution time.')";
+		$db->query($query);
+	}
 }
 
 ?>
