@@ -7,6 +7,7 @@
 $startTime = time();
 $interruptedExecution = false;
 register_shutdown_function('shutdown');
+// make sure our file_exist returns fresh data.  Likely not necessary.
 clearstatcache();
 
 if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
@@ -24,8 +25,9 @@ if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
 	$LOCK_FILE = '/home/atomaka/data/whoisandrew.lock';
 }
 
+// All the sources we intend on pulling data from with a corresponding
+// cache lifetime.
 $dataSources = array(
-	//function,		cache_duration
 	'twitter'		=> 300,
 	'github'		=> 300,
 	'hulu'			=> 600,
@@ -35,6 +37,7 @@ $dataSources = array(
 	'wow'			=> 43200,
 );
 
+// Make sure that the script does not begin execution if it is already.
 if(!file_exists($LOCK_FILE)) {
 	touch($LOCK_FILE);
 } else {
@@ -42,6 +45,7 @@ if(!file_exists($LOCK_FILE)) {
 	exit();
 }
 
+// In case our data files are not present
 if(file_exists($CACHE_FILE)) {
 	$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
 } else {
@@ -77,6 +81,8 @@ function twitter() {
 	$url = 'http://www.twitter.com/statuses/user_timeline/atomaka.json?count=1';
 	$tweetInfo = json_decode(file_get_contents($url));
 	
+	// An empty result set currently (always?) means that the last post was
+	// retweeted.
 	if(empty($tweetInfo)) {
 		return array(
 			'text'		=> 'Last post was a retweet and cannot be listed.',
@@ -97,6 +103,9 @@ function github() {
 	$url = 'https://api.github.com/users/atomaka/repos';
 	$repos = json_decode(curl_request($url));
 	
+	// & notation for a variable to be passed by reference is actually
+	// deprecated and will cause a warning in 5.3.  However, it is
+	// required to work in 5.2
 	usort(&$repos,'github_sort');
 	
 	// and then get the last commit to that repo
@@ -121,7 +130,6 @@ function lastfm() {
 	$time = (isset($latestSong->attributes()->nowplaying) && 
 		(bool)$latestSong->attributes()->nowplaying) ?
 		0 : strtotime($latestSong->date . ' UTC');
-
 	
 	return array(
 		'song'			=> (string)$latestSong->name,
@@ -204,8 +212,7 @@ function wow() {
 		9		=> 'warlock',
 		3		=> 'hunter',
 	);
-	
-	$benchmark_start = time();
+
 	$characters = array(
 		'Gaffer'		=> false,
 		'Getburnt'		=> false,
@@ -242,7 +249,7 @@ function wow() {
 			curl_multi_getcontent($characters[$character])
 		);
 
-		// merge the two ragnaros bosses
+		// merge heroic and normal ragnaros
 		$bosses = $json->progression->raids[$currentInstance]->bosses;
 		$bosses[6]->heroicKills = $bosses[7]->heroicKills;
 		unset($bosses[7]);
@@ -251,6 +258,8 @@ function wow() {
 		$leastN = 1000;
 		$leastH = 1000;
 		foreach($bosses as $boss) {
+			// -1 means that the boss has never but killed on normal, but
+			// has been on heroic so it's safe to reset to 0 for our purposes.
 			if($boss->normalKills == -1) $boss->normalKills = 0;
 			if(($boss->normalKills + $boss->heroicKills) < $leastN) {
 				$leastN = $boss->normalKills + $boss->heroicKills;
@@ -259,10 +268,8 @@ function wow() {
 		}
 
 		//find our active talent tree
-		$spec = null;
 		foreach($json->talents as $talent) {
 			if(isset($talent->selected)) {
-				$spec = $talent;
 				break;
 			}
 		}
@@ -278,6 +285,9 @@ function wow() {
 		);
 	}
 	
+	// & notation for a variable to be passed by reference is actually
+	// deprecated and will cause a warning in 5.3.  However, it is
+	// required to work in 5.2
 	usort(&$characterData,'progression_sort');
 
 	return $characterData;
@@ -314,6 +324,7 @@ function curl_prep($url) {
 
 function urlify($string) {
 	$pattern ="{\\b((https?|telnet|gopher|file|wais|ftp) : [\\w/\\#~:.?+=&%@!\\-]+?) (?= [.:?\\-]* (?:[^\\w/\\#~:.?+=&%@!\\-] |$) ) }x"; 
+	
 	return preg_replace($pattern,"<a href=\"$1\">$1</a>", $string); 
 }
 
@@ -326,6 +337,7 @@ function progression_sort($a, $b) {
 }
 
 function shutdown() {
+	// need to make the variables we need available
 	global $interruptedExecution, $startTime, $LOCK_FILE, $DATABASE_FILE;
 	
 	$db_conf = json_decode(file_get_contents($DATABASE_FILE));
@@ -333,21 +345,24 @@ function shutdown() {
 	$db->real_connect($db_conf->hostname,$db_conf->username,$db_conf->password,
 		$db_conf->database);
 	
-	if(!$interruptedExecution) {
-		unlink($LOCK_FILE);
-	} else {
-		$errorTime = time();
+	// $interruptedExecution is true if our lock file still existed when the 
+	// script began execution.  true also implies that the lock file does not
+	// exist.
+	if($interruptedExecution) {
 		$query = "INSERT INTO wia_log (time,type,description) VALUES(NOW(),
 			'warning',
 			'The script attempted to run while another copy was already processing')";
 		$db->query($query);
+	} else {
+		unlink($LOCK_FILE);
 	}
 
 	$completionTime = time() - $startTime;
 
+	// If the script took longer to execute than the server allows and the server
+	// does not have an unlimited execution time
 	if($completionTime >= ini_get('max_execution_time') &&
 		ini_get('max_execution_time') != 0) {
-		$errorTime = time();
 		$message = 'The script reached the maximum execution time: ' . 
 			$completionTime;
 		$query = "INSERT INTO wia_log (time,type,description) VALUES(NOW(),
