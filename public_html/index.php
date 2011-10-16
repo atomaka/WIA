@@ -3,9 +3,9 @@
 $data = json_decode(file_get_contents('../data/index.txt'));
 	
 // retrieve links from database
-$db_config = json_decode(file_get_contents('../conf/database.conf'));
+$conf = json_decode(file_get_contents('../conf/wia.conf'));
 include('lib/database.php');
-$db = new Database($db_config->hostname,$db_config->username,$db_config->password,$db_config->database);
+$db = new Database($conf->db->hostname,$conf->db->username,$conf->db->password,$conf->db->database);
 
 $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHERE status = 2 OR status = 3 ORDER BY released_date DESC LIMIT 15");
 ?><!DOCTYPE HTML>
@@ -81,10 +81,6 @@ while($link = $links->fetch_object()) {
 				</div>
 			</div>
 			<div id="column2">
-				<h2>fitness</h2>
-				<div id="fitness" class="box">
-					Collecting data.
-				</div>
 				<h2>media</h2>
 				<div id="lastfm" class="box">
 					<table class="formatting">

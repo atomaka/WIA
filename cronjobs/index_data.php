@@ -11,19 +11,14 @@ register_shutdown_function('shutdown');
 clearstatcache();
 
 if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
-	$DATABASE_FILE = getcwd() . '/../conf/database.conf';
-	$CACHE_FILE = '../data/cache.txt';
-	$DATA_FILE = '../data/index.txt';
-	$LOCK_FILE = getcwd() . '/../data/whoisandrew.lock';
+	$conf = json_decode(file_get_contents(getcwd() . '/../conf/wia.conf'));
 } else {
-	chdir('/home/atomaka/data');
-	
-	$DATABASE_FILE = '/home/atomaka/conf/database.conf';
-	$CACHE_FILE = 'cache.txt';
-	$DATA_FILE = 'index.txt';
-	// path changes in the shutdown() function so we need the full path
-	$LOCK_FILE = '/home/atomaka/data/whoisandrew.lock';
+	$conf = json_decode(file_get_contents('/home/atomaka/conf/wia.conf'));
 }
+
+define('CACHE',$conf->site->path . '/data/cache.txt');
+define('DATA',$conf->site->path . '/data/index.txt');
+define('LOCK',$conf->site->path . '/data/whoisandrew.lock');
 
 // All the sources we intend on pulling data from with a corresponding
 // cache lifetime.
@@ -38,21 +33,21 @@ $dataSources = array(
 );
 
 // Make sure that the script does not begin execution if it is already.
-if(!file_exists($LOCK_FILE)) {
-	touch($LOCK_FILE);
+if(!file_exists(LOCK)) {
+	touch(LOCK);
 } else {
 	$interruptedExecution = true;
 	exit();
 }
 
 // In case our data files are not present
-if(file_exists($CACHE_FILE)) {
-	$cacheData = json_decode(file_get_contents($CACHE_FILE),true);
+if(file_exists(CACHE)) {
+	$cacheData = json_decode(file_get_contents(CACHE),true);
 } else {
 	$cacheData = array();
 }
-if(file_exists($DATA_FILE)) {
-	$sourceData = json_decode(file_get_contents($DATA_FILE),true);
+if(file_exists(DATA)) {
+	$sourceData = json_decode(file_get_contents(DATA),true);
 } else {
 	$sourceData = array();
 }
@@ -70,8 +65,8 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 	}
 }
 
-file_put_contents($CACHE_FILE,json_encode($cacheData));
-file_put_contents($DATA_FILE,json_encode($sourceData));
+file_put_contents(CACHE,json_encode($cacheData));
+file_put_contents(DATA,json_encode($sourceData));
 
 
 //***************************************************************************//
@@ -338,12 +333,11 @@ function progression_sort($a, $b) {
 
 function shutdown() {
 	// need to make the variables we need available
-	global $interruptedExecution, $startTime, $LOCK_FILE, $DATABASE_FILE;
-	
-	$db_conf = json_decode(file_get_contents($DATABASE_FILE));
+	global $interruptedExecution, $startTime, $conf;
+
 	$db = mysqli_init();
-	$db->real_connect($db_conf->hostname,$db_conf->username,$db_conf->password,
-		$db_conf->database);
+	$db->real_connect($conf->db->hostname,$conf->db->username,$conf->db->password,
+		$conf->db->database);
 	
 	// $interruptedExecution is true if our lock file still existed when the 
 	// script began execution.  true also implies that the lock file does not
@@ -354,7 +348,7 @@ function shutdown() {
 			'The script attempted to run while another copy was already processing')";
 		$db->query($query);
 	} else {
-		unlink($LOCK_FILE);
+		unlink(LOCK);
 	}
 
 	$completionTime = time() - $startTime;

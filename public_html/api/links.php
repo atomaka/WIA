@@ -1,12 +1,11 @@
 <?php
-$db_config = json_decode(file_get_contents('../../conf/database.conf'));
-$api_config = json_decode(file_get_contents('../../conf/api.conf'));
+$conf = json_decode(file_get_contents('../../conf/iwa.conf'));
 
 include_once('../lib/database.php');
-$db = new Database($db_config->hostname,$db_config->username,$db_config->password,$db_config->database);
+$db = new Database($conf->db->hostname,$conf->db->username,$conf->db->password,$conf->db->database);
 
 $key = $_GET['link_key'];
-if($key != $api_config->key) die('{"message":"Access Denied."}');
+if($key != $db->site->key) die('{"message":"Access Denied."}');
 	
 $url = $_GET['url'];
 $title = $_GET['title'];
