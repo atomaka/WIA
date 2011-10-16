@@ -12,16 +12,14 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 <html lang="en"> 
 	<head>
 		<meta charset="utf-8" />
-		<title>Who is Andrew?</title>
-		<link rel="stylesheet" type="text/css" href="css/main.css?v=2" />
+		<title>Who is Andrew? Personal Site of Andrew Tomaka</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css?v=3" />
 		<link rel="shortcut icon" href="favicon.ico" />
 	</head>	
 	<body>
-		<!--<div id="header">--><h1>who is andrew?</h1><!--</div>-->
-		<br/><br/>
-	
+		<div id="header"><h1>andrew tomaka</h1></div>
 		<div id="content">
-			<div id="column1a">
+			<div id="column1">
 				<h2>contact</h2>
 				<div id="contacts" class="box center">
 					<img src="img/badges/email.png" class="contact" alt="Email Andrew Tomaka" title="atomaka@gmail.com" />
@@ -67,7 +65,7 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 					</div>-->
 				</div>
 			</div>
-			<div id="column1b">
+			<div id="column1">
 				<h2>random</h2>
 				<div id="random">
 <?php
@@ -82,7 +80,7 @@ while($link = $links->fetch_object()) {
 ?>				
 				</div>
 			</div>
-			<div id="column1c">
+			<div id="column2">
 				<h2>fitness</h2>
 				<div id="fitness" class="box">
 					Collecting data.

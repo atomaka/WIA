@@ -19,9 +19,10 @@ a {
 }
 
 h1 {
-	font-size: 1px;
+	font-size: 48px;
 	font-weight: bold;
-	visibility: hidden;
+	margin-top: 10px;
+	margin-bottom: 15px;
 }
 
 h2  {
@@ -46,7 +47,7 @@ table {
 }
 
 div#header {
-	width: 979px;
+	width: 1000px;
 	text-align: right;
 	color: #216332;
 	margin: 0px auto;
@@ -55,26 +56,20 @@ div#header {
 div#content {
 	background-color: #216332;
 	text-align: left;
-	width: 979px;
+	width: 1000px;
 	margin: 0px auto;
 	padding-top: 8px;
 	padding-bottom: 8px;
 }
 
-div#column1a {
-	width: 313px;
+div#column1 {
+	width: 320px;
 	float: left;
 	padding-left: 10px;
 }
 
-div#column1b {
-	width: 313px;
-	float: left;
-	padding-left: 10px;
-}
-
-div#column1c {
-	width: 313px;
+div#column2 {
+	width: 320px;
 	float: left;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -145,6 +140,11 @@ div#copyright {
 	min-height: 36px;
 }
 
+.cover {
+	border: 0;
+	width: 64px;
+}
+
 table.formatting {
 	width: 100%;
 	border-collapse: collapse;
@@ -170,9 +170,4 @@ td.gamesformatting {
 	padding: 0;
 	width: 68px;
 	vertical-align: top;
-}
-
-.cover {
-	border: 0;
-	width: 64px;
 }
