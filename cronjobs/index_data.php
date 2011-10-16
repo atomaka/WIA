@@ -170,8 +170,8 @@ function hulu() {
 		$thumb);
 
 	return array(
-		'series'		=> isset($title[2]) ? $title[2] : 'Not Available',
-		'title'			=> $title[0],
+		'series'		=> isset($title[2]) ? $title[0] : 'Not Available',
+		'title'			=> isset($title[2]) ? $title[2] : $title[0],
 		'time'			=> strtotime($lastShow->pubDate),
 		'url'			=> (string)$lastShow->link,
 		'thumb'			=> $thumb[1],
