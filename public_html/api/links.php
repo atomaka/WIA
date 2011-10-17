@@ -1,5 +1,5 @@
 <?php
-$conf = json_decode(file_get_contents('../../conf/iwa.conf'));
+$conf = json_decode(file_get_contents('../../conf/wia.conf'));
 
 include_once('../lib/database.php');
 $db = new Database($conf->db->hostname,$conf->db->username,$conf->db->password,$conf->db->database);
