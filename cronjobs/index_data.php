@@ -23,7 +23,7 @@ define('LOCK',$conf->site->path . '/data/whoisandrew.lock');
 // All the sources we intend on pulling data from with a corresponding
 // cache lifetime.
 $dataSources = array(
-	'twitter'		=> 0, //300,
+	'twitter'		=> 300,
 	'github'		=> 300,
 	'hulu'			=> 600,
 	'lastfm'		=> 60,
@@ -61,8 +61,14 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 	if(time() - $lastModified > $refreshTime) {
 		$cacheData[$dataSource] = time();
 		
-		$sourceData[$dataSource] = call_user_func($dataSource);
+		$sourceData = call_user_func($dataSource);
 	}
+    
+    if($sourceData != false) { 
+        $sourceData[$dataSource] = $sourceData;
+    } else {
+        $cacheData[$dataSource] = 0;
+    }
 }
 
 file_put_contents(CACHE,json_encode($cacheData));
@@ -79,18 +85,24 @@ function twitter() {
 	// An empty result set currently (always?) means that the last post was
 	// retweeted.
 	if(empty($tweetInfo)) {
-		return array(
+		$data = array(
 			'text'		=> 'Last post was a retweet and cannot be listed.',
 			'time'		=> 0,
 		);
 	} else {
 		$tweet = urlify($tweetInfo[0]->text);
 		
-		return array(
+		$data = array(
 			'text'		=> $tweet,
 			'time'		=> strtotime($tweetInfo[0]->created_at),
 		);
 	}
+    
+    if(isset($data['text']) && isset($data['time'])) {
+        return $data;
+    } else {
+        return false;
+    }
 }
 
 function github() {
@@ -108,11 +120,17 @@ function github() {
 		$repos[0]->name);
 	$commits = json_decode(curl_request($url));
 	
-	return array(
+	$data = array(
 		'commit'	=> $commits[0]->commit->message,
 		'repo'		=> $repos[0]->name,
 		'url'		=> $repos[0]->html_url,
 	);
+    
+    if(isset($data['commit']) && isset($data['repo']) && isset($data['url'])) {
+        return $data;
+    } else {
+        return false;
+    }
 }
 
 function lastfm() {
@@ -126,31 +144,43 @@ function lastfm() {
 		(bool)$latestSong->attributes()->nowplaying) ?
 		0 : strtotime($latestSong->date . ' UTC');
 	
-	return array(
+	$data = array(
 		'song'			=> (string)$latestSong->name,
 		'artist'		=> (string)$latestSong->artist,
 		'time'			=> $time,
 		'url'			=> (string)$latestSong->url,
 		'cover'			=> $cover,
 	);
+    
+    if(isset($data['song']) && isset($data['artist']) && isset($data['time']) && isset($data['url']) && isset($data['cover'])) {
+        return $data;
+    } else {
+        return false;
+    }    
 }
 
 function sc2ranks() {
 	$url = 'http://sc2ranks.com/api/base/teams/us/Gaffer$888.json?appKey=whoisandrew.com';
 	$profile = json_decode(file_get_contents($url));
-	
+
 	// find the 1v1 team
 	foreach($profile->teams as $team) {
 		if($team->bracket == 1) break;
 	}
-
-	return array(
+    
+	$data = array(
 		'league'		=> $team->league,
 		'division'		=> $team->division,
 		'rank'			=> $team->division_rank,
 		'points'		=> $team->points,
 		'wins'			=> $team->wins,
 	);
+    
+    if(isset($data['league']) && isset($data['division']) && isset($data['rank']) && isset($data['points']) && isset($data['wins'])) {
+        return $data;
+    } else {
+        return false;
+    }
 }
 
 function hulu() {
@@ -164,13 +194,19 @@ function hulu() {
 	preg_match('/<img src="(.*)" align="right"/',(string)$lastShow->description,
 		$thumb);
 
-	return array(
+	$data = array(
 		'series'		=> isset($title[2]) ? $title[0] : 'Not Available',
 		'title'			=> isset($title[2]) ? $title[2] : $title[0],
 		'time'			=> strtotime($lastShow->pubDate),
 		'url'			=> (string)$lastShow->link,
 		'thumb'			=> $thumb[1],
 	);
+    
+    if(isset($data['series']) && isset($data['title']) && isset($data['time']) && isset($data['url']) && isset($data['thumb'])) {
+        return $data;
+    } else {
+        return false;
+    }
 }
 
 function steam() {
@@ -189,10 +225,16 @@ function steam() {
 		}
 	}
 	
-	return array(
+	$data = array(
 		'hours'		=> (float)$xml->hoursPlayed2Wk,
 		'recent'	=> $recentGames,
 	);
+    
+    if(isset($data['hours']) && isset($data['recent'])) {
+        return $data;
+    } else {
+        return false;
+    }
 }
 
 function wow() {
@@ -285,7 +327,20 @@ function wow() {
 	// required to work in 5.2
 	usort(&$characterData,'progression_sort');
 
-	return $characterData;
+    
+	$data = $characterData;
+    
+    foreach($data as $character) {
+        if(!isset($character['name'])) return false;
+        if(!isset($character['level'])) return false;
+        if(!isset($character['class'])) return false;
+        if(!isset($character['progression'])) return false;
+        if(!isset($character['armory'])) return false;
+        if(!isset($character['spec_icon'])) return false;
+        if(!isset($character['spec_name'])) return false;
+    } 
+    
+    return $data;
 }
 
 
