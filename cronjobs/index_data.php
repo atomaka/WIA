@@ -73,7 +73,7 @@ file_put_contents(DATA,json_encode($sourceData));
 //	Data sources
 //***************************************************************************//
 function twitter() {
-	$url = 'http://www.twitter.com/statuses/user_timeline/atomaka.json?count=1';
+	$url = 'http://www.twitter.com/statuses/user_timeline/atomaka.json?count=1&include_rts=true';
 	$tweetInfo = json_decode(file_get_contents($url));
 	
 	// An empty result set currently (always?) means that the last post was
