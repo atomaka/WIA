@@ -23,7 +23,7 @@ define('LOCK',$conf->site->path . '/data/whoisandrew.lock');
 // All the sources we intend on pulling data from with a corresponding
 // cache lifetime.
 $dataSources = array(
-	'twitter'		=> 300,
+	'twitter'		=> 0, //300,
 	'github'		=> 300,
 	'hulu'			=> 600,
 	'lastfm'		=> 60,
@@ -73,9 +73,9 @@ file_put_contents(DATA,json_encode($sourceData));
 //	Data sources
 //***************************************************************************//
 function twitter() {
-	$url = 'http://www.twitter.com/statuses/user_timeline/atomaka.json?count=1&include_rts=true';
-	$tweetInfo = json_decode(file_get_contents($url));
-	
+	$url = 'https://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=atomaka&count=1';
+    $tweetInfo = json_decode(curl_request($url));
+    
 	// An empty result set currently (always?) means that the last post was
 	// retweeted.
 	if(empty($tweetInfo)) {
