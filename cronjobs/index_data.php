@@ -61,14 +61,16 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 	if(time() - $lastModified > $refreshTime) {
 		$cacheData[$dataSource] = time();
 		
-		$sourceData = call_user_func($dataSource);
+		$data = call_user_func($dataSource);
+        
+        if($data != false) { 
+            echo 'updating ' . $dataSource . '<br/>';
+            $sourceData[$dataSource] = $data;
+        } else {
+            echo 'failed ' . $dataSource . '<br/>';
+            $cacheData[$dataSource] = 0;
+        }
 	}
-    
-    if($sourceData != false) { 
-        $sourceData[$dataSource] = $sourceData;
-    } else {
-        $cacheData[$dataSource] = 0;
-    }
 }
 
 file_put_contents(CACHE,json_encode($cacheData));
