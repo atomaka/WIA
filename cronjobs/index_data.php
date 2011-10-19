@@ -64,10 +64,8 @@ foreach($dataSources as $dataSource=>$refreshTime) {
 		$data = call_user_func($dataSource);
         
         if($data != false) { 
-            echo 'updating ' . $dataSource . '<br/>';
             $sourceData[$dataSource] = $data;
         } else {
-            echo 'failed ' . $dataSource . '<br/>';
             $cacheData[$dataSource] = 0;
         }
 	}
