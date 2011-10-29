@@ -10,7 +10,7 @@ register_shutdown_function('shutdown');
 // make sure our file_exist returns fresh data.  Likely not necessary.
 clearstatcache();
 
-if(in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
+if(isset($_SERVER['SERVER_NAME']) && in_array($_SERVER['SERVER_NAME'],array('localhost','a.io'))) {
 	$conf = json_decode(file_get_contents(getcwd() . '/../conf/wia.conf'));
 } else {
 	$conf = json_decode(file_get_contents('/home/atomaka/conf/wia.conf'));
