@@ -26,8 +26,8 @@ $dataSources = array(
 	'twitter'		=> 300,
 	'github'		=> 300,
 	'hulu'			=> 600,
-	'lastfm'		=> 60,
-	'sc2ranks'		=> 43200,
+	'lastfm'		=> 150,
+	/*'sc2ranks'		=> 43200,*/
 	'steam'			=> 3600,
 	'wow'			=> 43200,
 );
