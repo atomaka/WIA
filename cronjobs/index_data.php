@@ -27,7 +27,7 @@ $dataSources = array(
 	'github'		=> 300,
 	'hulu'			=> 600,
 	'lastfm'		=> 60,
-	'sc2ranks'		=> 43200,
+	// 'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
 	'wow'			=> 43200,
 );
