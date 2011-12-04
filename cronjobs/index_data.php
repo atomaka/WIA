@@ -268,7 +268,7 @@ function wow() {
 	// build our mutli curl request
 	$mh = curl_multi_init();
 	foreach($characters as $character=>$data) {
-		$url = sprintf('http://us.battle.net/api/wow/character/crushridge/%s?fields=progression,talents',
+		$url = sprintf('http://us.battle.net/api/wow/character/crushridge/%s?fields=items,talents',
 			$character);
 			
 		$characters[$character] = curl_prep($url);
@@ -288,23 +288,8 @@ function wow() {
 			curl_multi_getcontent($characters[$character])
 		);
 
-		// merge heroic and normal ragnaros
-		$bosses = $json->progression->raids[$currentInstance]->bosses;
-		$bosses[6]->heroicKills = $bosses[7]->heroicKills;
-		unset($bosses[7]);
-		
-		// find the boss with the lowest kills
-		$leastN = 1000;
-		$leastH = 1000;
-		foreach($bosses as $boss) {
-			// -1 means that the boss has never but killed on normal, but
-			// has been on heroic so it's safe to reset to 0 for our purposes.
-			if($boss->normalKills == -1) $boss->normalKills = 0;
-			if(($boss->normalKills + $boss->heroicKills) < $leastN) {
-				$leastN = $boss->normalKills + $boss->heroicKills;
-			}
-			if($boss->heroicKills < $leastH) $leastH = $boss->heroicKills;
-		}
+		//find the average item level
+		$ilvl = $json->items->averageItemLevel;
 
 		//find our active talent tree
 		foreach($json->talents as $talent) {
@@ -317,17 +302,16 @@ function wow() {
 			'name'			=> $character,
 			'level'			=> $json->level,
 			'class'			=> $CLASSES[$json->class],
-			'progression'	=> $leastH > 0 ? $leastH * 100 : $leastN,
+			'ilvl' 			=> $ilvl,
 			'armory'		=> sprintf('http://us.battle.net/wow/en/character/crushridge/%s/advanced',$character),
 			'spec_icon'		=> $talent->icon,
 			'spec_name'		=> $talent->name,
 		);
 	}
-	
 	// & notation for a variable to be passed by reference is actually
 	// deprecated and will cause a warning in 5.3.  However, it is
 	// required to work in 5.2
-	usort(&$characterData,'progression_sort');
+	usort(&$characterData,'ilvl_sort');
 
     
 	$data = $characterData;
@@ -336,7 +320,7 @@ function wow() {
         if(!isset($character['name'])) return false;
         if(!isset($character['level'])) return false;
         if(!isset($character['class'])) return false;
-        if(!isset($character['progression'])) return false;
+        if(!isset($character['ilvl'])) return false;
         if(!isset($character['armory'])) return false;
         if(!isset($character['spec_icon'])) return false;
         if(!isset($character['spec_name'])) return false;
@@ -384,8 +368,8 @@ function github_sort($a, $b) {
 	return strtotime($a->pushed_at) < strtotime($b->pushed_at);
 }
 
-function progression_sort($a, $b) {
-	return $a['progression'] < $b['progression'];
+function ilvl_sort(&$a, &$b) {
+	return $a['ilvl'] < $b['ilvl'];
 }
 
 function shutdown() {
