@@ -115,7 +115,7 @@ function github() {
 	// & notation for a variable to be passed by reference is actually
 	// deprecated and will cause a warning in 5.3.  However, it is
 	// required to work in 5.2
-	usort(&$repos,'github_sort');
+	usort($repos,'github_sort');
 	
 	// and then get the last commit to that repo
 	$url = sprintf('https://api.github.com/repos/atomaka/%s/commits',
@@ -311,7 +311,7 @@ function wow() {
 	// & notation for a variable to be passed by reference is actually
 	// deprecated and will cause a warning in 5.3.  However, it is
 	// required to work in 5.2
-	usort(&$characterData,'ilvl_sort');
+	usort($characterData,'ilvl_sort');
 
     
 	$data = $characterData;
@@ -364,7 +364,7 @@ function urlify($string) {
 	return preg_replace($pattern,"<a href=\"$1\">$1</a>", $string); 
 }
 
-function github_sort($a, $b) {
+function github_sort(&$a, &$b) {
 	return strtotime($a->pushed_at) < strtotime($b->pushed_at);
 }
 
