@@ -1,0 +1,4 @@
+data/*
+conf/
+.htpasswd
+wia.conf
