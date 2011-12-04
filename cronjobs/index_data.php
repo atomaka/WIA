@@ -259,7 +259,7 @@ function wow() {
 		'Toppazz'		=> false,
 		'Toopro'		=> false,
 		'Levita'		=> false,
-		'Ttg'			=> false,
+		'Trinikwan' 	=> false,
 		'Notgaffer'		=> false,
 		'Loveglove'		=> false,
 	);
