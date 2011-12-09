@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 $conf = json_decode(file_get_contents('../../conf/wia.conf'));
 
 include_once('../lib/database.php');
@@ -14,9 +15,17 @@ if(filter_var($url,FILTER_VALIDATE_URL) == false || !preg_match('{http://}',$url
 	die('{"message":"Malformed URL."}');
 
 if($db->connect_error) die('{"message":"No Database Connection."}');
-	
-$db->query("INSERT INTO wia_links (url,text,status) VALUES ('$url','$title',0)");
-if($db->error) die('{"message":"Could Not Add."}');
+
+$query = $db->prepare("INSERT INTO wia_links (url,text,status) VALUES (?,?,0)");
+$query->bind_param('ss',$url,$title);
+$query->execute();
+if($db->error) {
+	$error = array(
+		'message' 		=> 'Could Not Add.',
+		'error'			=> $db->error,
+	);
+	die(json_encode($error));
+}
 	
 $db->close();
 ?>
