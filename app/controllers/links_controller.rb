@@ -17,11 +17,12 @@ class LinksController < ApplicationController
   def show
     @link = Link.get_and_count(params[:id])
 
-    #update link count
+    #if it's not released, need to error
 
     respond_to do |format|
       format.html { redirect_to @link.url }
       format.json { render :json => @link }
+      format.xml { render :xml => @link }
     end
   end
 end
