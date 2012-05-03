@@ -1,4 +1,8 @@
 WwwWhoisandrewCom::Application.routes.draw do
+  resources :links
+
+  root :to => "home#index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
