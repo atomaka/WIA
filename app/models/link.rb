@@ -3,11 +3,11 @@ class Link < ActiveRecord::Base
   validates :url,   :presence => true, :url => true
   validates :description, :presence => true
 
-  def released
+  def self.released
     Link.where("DATE(release) <= DATE(?)", Time.now).order("release DESC")
   end
 
-  def goto(id = nil)
+  def self.goto(id = nil)
     return false if nil
 
     Link.transaction do
