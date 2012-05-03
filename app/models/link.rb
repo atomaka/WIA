@@ -7,9 +7,10 @@ class Link < ActiveRecord::Base
     Link.where("DATE(release) <= DATE(?)", Time.now).order("release DESC")
   end
 
-  def self.goto(id = nil)
+  def self.get_and_count(id = nil)
     return false if nil
 
+    link = nil
     Link.transaction do
       link = Link.find(id)
       link.visits += 1

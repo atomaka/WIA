@@ -15,7 +15,7 @@ class LinksController < ApplicationController
   end
 
   def show
-    @link = Link.goto(params[:id])
+    @link = Link.get_and_count(params[:id])
 
     #update link count
 
