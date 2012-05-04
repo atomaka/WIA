@@ -13,8 +13,8 @@ class Link < ActiveRecord::Base
     link = nil
     Link.transaction do
       link = Link.find(id)
-      link.visits += 1
-      link.save
+      #need to rate limit visits increment
+      link.increment!(:visits)
     end
 
     return link
