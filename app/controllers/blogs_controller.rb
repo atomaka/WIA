@@ -14,6 +14,7 @@ class BlogsController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render :json => @blog }
+    end
   end
 
 end
