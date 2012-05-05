@@ -1,5 +1,6 @@
 WwwWhoisandrewCom::Application.routes.draw do
   resources :links
+  resources :blogs
 
   root :to => "home#index"
 
