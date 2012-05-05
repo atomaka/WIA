@@ -17,6 +17,8 @@ class Link < ActiveRecord::Base
       link.increment!(:visits)
     end
 
+    return false if link.release == nil
+
     return link
   end
 end

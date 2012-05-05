@@ -17,8 +17,6 @@ class LinksController < ApplicationController
   def show
     @link = Link.get_and_count(params[:id])
 
-    #if it's not released, need to error
-
     respond_to do |format|
       format.html { redirect_to @link.url }
       format.json { render :json => @link }
