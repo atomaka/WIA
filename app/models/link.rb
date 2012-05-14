@@ -1,6 +1,6 @@
 class Link < ActiveRecord::Base
   attr_accessible :description, :release, :url
-  validates :url,   :presence => true, :url => true
+  validates :url,   :presence => true#, :url => true
   validates :description, :presence => true
 
   def self.released
