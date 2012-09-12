@@ -25,11 +25,11 @@ define('LOCK',$conf->site->path . '/data/whoisandrew.lock');
 $dataSources = array(
 	'twitter'		=> 300,
 	'github'		=> 300,
-	'hulu'			=> 600,
 	'lastfm'		=> 60,
 	// 'sc2ranks'		=> 43200,
 	'steam'			=> 3600,
-	'wow'			=> 43200,
+	'wow'				=> 43200,
+	'diablo'		=> 43200,
 );
 
 // Make sure that the script does not begin execution if it is already.
@@ -239,11 +239,33 @@ function steam() {
     }
 }
 
+function diablo() {
+	$url = 'http://us.battle.net//api/d3/profile/Tomaka-1761/';
+	$career = json_decode(curl_request($url));
+
+	// cheat and just use information from barbarian
+	$barb = $career->heroes[0];
+
+	$data = array(
+		'hardcoreFails' 	=> (int)count($career->fallenHeroes),
+		'highestParagon' 	=> (int)$barb->paragonLevel,
+		'monsters'				=> (int)$career->kills->monsters,
+		'elites'					=> (int)$career->kills->elites,
+		'hardcoreMonsters'=> (int)$career->kills->hardcoreMonsters,
+	);
+
+	if(isset($data['hardcoreFails'])&&isset($data['highestParagon'])&&isset($data['monsters'])&&isset($data['elites'])&&isset($data['hardcoreMonsters'])) {
+		return $data;
+	} else {
+		return false;
+	}
+}
+
 function wow() {
 	$CLASSES = array(
 		6		=> 'deathknight',
 		5		=> 'priest',
-		11		=> 'druid',
+		11	=> 'druid',
 		4		=> 'rogue',
 		8		=> 'mage',
 		7		=> 'shaman',
@@ -253,12 +275,12 @@ function wow() {
 	);
 
 	$characters = array(
-		'Gaffer'		=> false,
+		'Gaffer'			=> false,
 		'Getburnt'		=> false,
 		'Veincane'		=> false,
-		'Toppazz'		=> false,
-		'Toopro'		=> false,
-		'Levita'		=> false,
+		'Toppazz'			=> false,
+		'Toopro'			=> false,
+		'Levita'			=> false,
 		'Trinikwan' 	=> false,
 		'Notgaffer'		=> false,
 		'Loveglove'		=> false,

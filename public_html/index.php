@@ -47,10 +47,10 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 				</div>
 				
 				<br/>
-				<h2>projects</h2>
+				<!--<h2>projects</h2>
 				<h3>project 1</h3>
 				<div id="projects">
-					<!--<div id ="tomtvgrid" class="box">
+					<div id ="tomtvgrid" class="box">
 						<table class="formatting">
 							<tr>
 								<td class="top">
@@ -62,8 +62,8 @@ $links = $db->query("SELECT id,url,text,status,released_date FROM wia_links WHER
 								</td>
 							</tr>
 						</table>
-					</div>-->
-				</div>
+					</div>
+				</div>-->
 			</div>
 			<div id="column1">
 				<h2>random</h2>
@@ -97,7 +97,7 @@ while($link = $links->fetch_object()) {
 						</tr>
 					</table>
 				</div>
-				<div id="hulu" class="box">
+				<!--<div id="hulu" class="box">
 					<table class="formatting">
 						<tr>
 							<td class="formatting">
@@ -111,7 +111,7 @@ while($link = $links->fetch_object()) {
 							</td>
 						</tr>
 					</table>
-				</div>
+				</div>-->
 				<br/>
 				<h2>games</h2>
 				<h3>World of Warcraft</h3>
@@ -140,7 +140,21 @@ foreach($data->wow as $character) {
 						</tr>
 					</table>
 				</div>
+				<h3>Diablo 3</h3>
 				<h3>Starcraft 2</h3>
+				<div id="sc2" class="box">
+					<table class="formatting">
+						<tr>
+							<td class="gamesformatting"><a href="http://battle.net/d3"><img src="img/badges/diablo3.png" alt="Diablo 3" /></a></td>
+							<td class="top">
+								<a href="http://us.battle.net/d3/en/profile/Tomaka-1761/">Tomaka#1761</a><br/>
+								Paragon: <?php echo $data->diablo->highestParagon ?><br/>
+								Elite Kills: <?php echo $data->diablo->elites ?>
+							</td>
+							<td class="right,top"><img src="img/d3/barbarian.jpg" alt="<?php echo ucfirst($data->sc2ranks->league) ?> League" /></td>
+						</tr>
+					</table>
+				</div>
 				<div id="sc2" class="box">
 					<table class="formatting">
 						<tr>
